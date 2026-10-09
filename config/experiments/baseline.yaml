@@ -1,0 +1,14 @@
+# Baseline Experiment
+# Overrides default.yaml for a quick baseline run
+
+model:
+  params:
+    num_leaves: 31
+    n_estimators: 300
+    learning_rate: 0.05
+
+tuning:
+  enabled: false
+
+features:
+  pca_components: 32

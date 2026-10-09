@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "wiki-vandalism-detector"
+version = "0.1.0"
+description = "Real-time vandalism and edit-war detection on Wikipedia using Wikimedia EventStreams"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "sseclient-py>=1.8",
+    "requests>=2.31",
+    "pandas>=2.1",
+    "pyarrow>=14.0",
+    "numpy>=1.26",
+    "scikit-learn>=1.3",
+    "lightgbm>=4.1",
+    "optuna>=3.4",
+    "sentence-transformers>=2.2",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+    "click>=8.1",
+    "matplotlib>=3.8",
+    "seaborn>=0.13",
+    "joblib>=1.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

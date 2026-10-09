@@ -1,0 +1,106 @@
+# Wikipedia Vandalism Detector - Default Configuration
+# Override per-experiment in config/experiments/*.yaml
+
+project:
+  name: wiki-vandalism-detector
+  seed: 42
+
+stream:
+  url: "https://stream.wikimedia.org/v2/stream/recentchange"
+  wiki: "enwiki"
+  event_type: "edit"
+  buffer_size: 500
+  flush_interval_sec: 60
+  max_events: null                # null = unlimited
+
+data:
+  raw_dir: "data/raw"
+  labeled_dir: "data/labeled"
+  features_dir: "data/features"
+  splits_dir: "data/splits"
+
+labeling:
+  revert_window_hours: 48
+  revert_patterns:
+    - "Reverted"
+    - "Undid revision"
+    - "rollback"
+    - "rv "
+    - "rvv"
+    - "revert"
+    - "Reverting"
+  use_api_backfill: true
+  api_batch_size: 50
+  api_rate_limit_sec: 1.0
+
+features:
+  embedding_model: "all-MiniLM-L6-v2"
+  embedding_dim: 384
+  pca_components: 32
+  rolling_window_edits: 100
+  numerical_features:
+    - "size_delta"
+    - "size_ratio"
+    - "hour_of_day"
+    - "day_of_week"
+    - "is_anonymous"
+    - "is_bot"
+    - "is_minor"
+    - "comment_length"
+    - "namespace"
+  text_features:
+    - "comment_embedding"
+
+splits:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  gap_hours: 48
+  strategy: "temporal"
+
+model:
+  type: "lightgbm"
+  params:
+    objective: "binary"
+    metric: "average_precision"
+    boosting_type: "gbdt"
+    num_leaves: 63
+    learning_rate: 0.05
+    n_estimators: 500
+    min_child_samples: 20
+    subsample: 0.8
+    colsample_bytree: 0.8
+    reg_alpha: 0.1
+    reg_lambda: 0.1
+    scale_pos_weight: "auto"
+    verbose: -1
+  early_stopping_rounds: 50
+
+tuning:
+  enabled: false
+  n_trials: 50
+  timeout_sec: 3600
+
+evaluation:
+  primary_metric: "pr_auc"
+  threshold_strategy: "f1_optimal"
+  target_recall: 0.80
+
+drift:
+  enabled: true
+  window_size_hours: 24
+  psi_threshold: 0.2
+  features_to_monitor:
+    - "size_delta"
+    - "hour_of_day"
+    - "is_anonymous"
+    - "comment_length"
+
+latency:
+  track: true
+  report_percentiles: [50, 90, 95, 99]
+
+synthetic:
+  n_samples: 10000
+  vandalism_rate: 0.04
+  time_span_days: 30

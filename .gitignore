@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Data files (too large for git)
+data/raw/**/*.parquet
+data/labeled/**/*.parquet
+data/features/**/*.parquet
+data/splits/**/*.parquet
+!data/**/.gitkeep
+
+# Models
+models/*.joblib
+models/*.txt
+models/*.json
+!models/.gitkeep
+
+# Reports (generated)
+reports/*.json
+reports/*.png
+reports/*.html
+!reports/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Optuna
+*.db
