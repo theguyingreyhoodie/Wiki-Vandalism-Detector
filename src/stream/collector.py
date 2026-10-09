@@ -70,47 +70,65 @@ class EditStreamCollector:
             "Accept": "text/event-stream",
         }
 
-        try:
-            response = requests.get(self.url, headers=headers, stream=True, timeout=30)
-            response.raise_for_status()
-            client = SSEClient(response)
+        reconnect_delay = 3.0
 
-            for event in client.events():
+        try:
+            while True:
                 if self.max_events and self._total_collected >= self.max_events:
                     logger.info(f"Reached max events limit: {self.max_events}")
                     break
 
-                if event.event != "message":
-                    continue
-
                 try:
-                    data = json.loads(event.data)
-                except json.JSONDecodeError:
-                    continue
+                    response = requests.get(
+                        self.url, headers=headers, stream=True, timeout=45
+                    )
+                    response.raise_for_status()
+                    client = SSEClient(response)
 
-                if data.get("type") != self.event_type:
-                    continue
-                if data.get("wiki") != self.wiki_filter:
-                    continue
+                    for event in client.events():
+                        if self.max_events and self._total_collected >= self.max_events:
+                            logger.info(f"Reached max events limit: {self.max_events}")
+                            break
 
-                record = self._parse_event(data)
-                if record:
-                    self._buffer.append(record)
-                    self._total_collected += 1
+                        if event.event != "message":
+                            continue
 
-                    if self._total_collected % 100 == 0:
-                        logger.info(
-                            f"Collected {self._total_collected} edits "
-                            f"(buffer: {len(self._buffer)})"
-                        )
+                        try:
+                            data = json.loads(event.data)
+                        except json.JSONDecodeError:
+                            continue
 
-                if self._should_flush():
-                    self._flush()
+                        if data.get("type") != self.event_type:
+                            continue
+                        if data.get("wiki") != self.wiki_filter:
+                            continue
+
+                        record = self._parse_event(data)
+                        if record:
+                            self._buffer.append(record)
+                            self._total_collected += 1
+
+                            if self._total_collected % 100 == 0:
+                                logger.info(
+                                    f"Collected {self._total_collected} edits "
+                                    f"(buffer: {len(self._buffer)})"
+                                )
+
+                        if self._should_flush():
+                            self._flush()
+
+                except (requests.exceptions.RequestException, Exception) as stream_err:
+                    if self._buffer:
+                        self._flush()
+                    if self.max_events and self._total_collected >= self.max_events:
+                        break
+                    logger.warning(
+                        f"Stream disconnected ({stream_err}). Reconnecting in {reconnect_delay:.0f}s ..."
+                    )
+                    time.sleep(reconnect_delay)
 
         except KeyboardInterrupt:
             logger.info("Collection interrupted by user")
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Stream connection error: {e}")
         finally:
             if self._buffer:
                 self._flush()
