@@ -40,12 +40,11 @@ def extract_edit_features(df: pd.DataFrame) -> pd.DataFrame:
     df["is_weekend"] = (df["day_of_week"] >= 5).astype(int)
 
     # ── User features ───────────────────────────────────────────────
-    df["is_anonymous"] = (
-        df["user"]
-        .str.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
-        .fillna(False)
-        .astype(int)
-    )
+    # Recognizes IPv4, IPv6, and Wikimedia Temporary Accounts (prefixed with ~)
+    is_ipv4 = df["user"].str.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$").fillna(False)
+    is_ipv6 = df["user"].str.contains(r":", na=False) & df["user"].str.match(r"^[0-9a-fA-F:]+$").fillna(False)
+    is_temp_account = df["user"].str.startswith("~").fillna(False)
+    df["is_anonymous"] = (is_ipv4 | is_ipv6 | is_temp_account).astype(int)
     df["is_bot"] = df["bot"].astype(int)
     df["is_minor"] = df["minor"].astype(int)
     df["username_length"] = df["user"].str.len().fillna(0)
