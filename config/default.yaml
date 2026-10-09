@@ -12,6 +12,7 @@ stream:
   buffer_size: 500
   flush_interval_sec: 60
   max_events: null                # null = unlimited
+  user_agent: "WikiVandalismDetector/0.1.0 (https://github.com/theguyingreyhoodie/wiki-vandalism-detector; research bot)"
 
 data:
   raw_dir: "data/raw"

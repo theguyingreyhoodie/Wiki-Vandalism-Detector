@@ -43,6 +43,10 @@ class EditStreamCollector:
         self.buffer_size = stream_cfg["buffer_size"]
         self.flush_interval = stream_cfg["flush_interval_sec"]
         self.max_events = stream_cfg.get("max_events")
+        self.user_agent = stream_cfg.get(
+            "user_agent",
+            "WikiVandalismDetector/0.1.0 (https://github.com/theguyingreyhoodie/wiki-vandalism-detector; research bot)",
+        )
         self.raw_dir = Path(config["data"]["raw_dir"])
         self.raw_dir.mkdir(parents=True, exist_ok=True)
 
@@ -61,8 +65,13 @@ class EditStreamCollector:
             f"(wiki={self.wiki_filter}, buffer={self.buffer_size})"
         )
 
+        headers = {
+            "User-Agent": self.user_agent,
+            "Accept": "text/event-stream",
+        }
+
         try:
-            response = requests.get(self.url, stream=True, timeout=30)
+            response = requests.get(self.url, headers=headers, stream=True, timeout=30)
             response.raise_for_status()
             client = SSEClient(response)
 

@@ -40,6 +40,10 @@ class RevertLabeler:
         self.use_api = lcfg.get("use_api_backfill", False)
         self.api_batch_size = lcfg.get("api_batch_size", 50)
         self.api_rate_limit = lcfg.get("api_rate_limit_sec", 1.0)
+        self.user_agent = config.get("stream", {}).get(
+            "user_agent",
+            "WikiVandalismDetector/0.1.0 (https://github.com/theguyingreyhoodie/wiki-vandalism-detector; research bot)",
+        )
 
     # ------------------------------------------------------------------
     # Main entry point
@@ -174,7 +178,8 @@ class RevertLabeler:
                     "rvprop": "ids|comment|tags",
                     "format": "json",
                 }
-                resp = requests.get(api_url, params=params, timeout=10)
+                headers = {"User-Agent": self.user_agent}
+                resp = requests.get(api_url, params=params, headers=headers, timeout=10)
                 resp.raise_for_status()
                 pages = resp.json().get("query", {}).get("pages", {})
                 for page in pages.values():
