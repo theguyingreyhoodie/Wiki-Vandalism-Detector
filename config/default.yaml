@@ -30,7 +30,7 @@ labeling:
     - "rvv"
     - "revert"
     - "Reverting"
-  use_api_backfill: true
+  use_api_backfill: false
   api_batch_size: 50
   api_rate_limit_sec: 1.0
 

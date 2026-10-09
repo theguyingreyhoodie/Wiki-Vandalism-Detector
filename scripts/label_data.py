@@ -24,8 +24,7 @@ def main(config_path, experiment, input_dir, output_file, api_backfill):
     setup_logging()
     cfg = load_config(config_path, experiment_path=experiment)
 
-    if api_backfill:
-        cfg["labeling"]["use_api_backfill"] = True
+    cfg["labeling"]["use_api_backfill"] = api_backfill
 
     in_dir = input_dir or cfg["data"]["raw_dir"]
     out_path = output_file or Path(cfg["data"]["labeled_dir"]) / "labeled_edits.parquet"
