@@ -111,8 +111,8 @@ class RevertLabeler:
         if not comment:
             return None
 
-        # "Undid revision 12345678"
-        match = re.search(r"[Uu]ndid revision (\d+)", comment)
+        # Matches both "Undid revision 12345" and "Undid revision [[Special:Diff/12345|12345]]"
+        match = re.search(r"[Uu]ndid revision[^\d]*(\d+)", comment)
         if match:
             return float(match.group(1))
 
