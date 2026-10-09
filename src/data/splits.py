@@ -9,6 +9,8 @@ the delayed-labelling window.
     t_min                                        t_max
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 

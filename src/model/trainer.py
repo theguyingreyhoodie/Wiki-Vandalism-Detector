@@ -9,6 +9,8 @@ Key design choices
 * **Optuna** for optional hyperparameter search with a per-trial budget.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import time

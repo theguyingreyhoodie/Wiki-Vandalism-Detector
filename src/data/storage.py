@@ -5,6 +5,8 @@ I/O logic so that serialisation format, compression, and partitioning
 can be changed in one place.
 """
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 

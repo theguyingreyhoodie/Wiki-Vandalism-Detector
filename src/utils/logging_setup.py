@@ -1,5 +1,7 @@
 """Structured logging setup using Rich console output."""
 
+from __future__ import annotations
+
 import logging
 
 from rich.console import Console

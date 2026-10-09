@@ -8,6 +8,8 @@ chosen for its speed/quality trade-off — fast enough for per-edit inference
 while still capturing semantic similarity.
 """
 
+from __future__ import annotations
+
 import logging
 import time
 from typing import Optional

@@ -9,6 +9,8 @@ English Wikipedia:
   (page blanking, link spamming, profanity/insults, large deletions)
 """
 
+from __future__ import annotations
+
 import logging
 import random
 import time

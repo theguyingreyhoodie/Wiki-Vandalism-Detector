@@ -7,7 +7,7 @@ name = "wiki-vandalism-detector"
 version = "0.1.0"
 description = "Real-time vandalism and edit-war detection on Wikipedia using Wikimedia EventStreams"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 dependencies = [
     "sseclient-py>=1.8",
     "requests>=2.31",

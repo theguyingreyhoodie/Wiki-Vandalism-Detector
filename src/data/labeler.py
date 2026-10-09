@@ -15,6 +15,8 @@ configured time window.  Reverts are detected via:
 Edits younger than ``revert_window_hours`` receive ``label=NaN`` (pending).
 """
 
+from __future__ import annotations
+
 import logging
 import re
 import time

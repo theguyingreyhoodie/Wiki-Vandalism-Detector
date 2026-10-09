@@ -6,6 +6,8 @@ so that downstream consumers (model, evaluation, drift) can introspect
 which columns correspond to which semantics.
 """
 
+from __future__ import annotations
+
 import logging
 import time
 from pathlib import Path

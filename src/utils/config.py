@@ -1,5 +1,7 @@
 """Configuration management with YAML loading and experiment overrides."""
 
+from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
 

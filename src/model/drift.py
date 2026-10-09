@@ -9,6 +9,8 @@ PSI Threshold Guidelines:
 - PSI >= 0.20: Significant drift; trigger retraining/alerting
 """
 
+from __future__ import annotations
+
 import json
 import logging
 from pathlib import Path

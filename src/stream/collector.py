@@ -8,6 +8,8 @@ Wikimedia docs: https://stream.wikimedia.org/?doc
 No API key required.
 """
 
+from __future__ import annotations
+
 import json
 import logging
 import time
